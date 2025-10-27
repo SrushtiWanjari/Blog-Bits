@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
+import jwtCheck from "./middleware/jwtCheck.js";
 import { postSignup, postLogin } from "./controllers/user.js";
 import Blog from "./models/Blog.js";
 import {
@@ -35,26 +36,6 @@ app.get("/", (req, res) => {
     message: "API is running...",
   });
 });
-
-const jwtCheck = (req, res, next) => {
-  req.user = null;
-
-  const { authorization } = req.headers;
-
-  if (!authorization) {
-    return res.status(400).json({ message: "Authorization token missing" });
-  }
-
-  try {
-    const token = authorization.split(" ")[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
-
-    next();
-  } catch (error) {
-    return res.status(401).json({ message: "Invalid JWT Token" });
-  }
-};
 
 const increaseViewCount = async (req, res, next) => {
   const { slug } = req.params;

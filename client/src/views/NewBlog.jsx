@@ -31,43 +31,91 @@ function NewBlog() {
   }, []);
 
   // Save Blog
+  // const saveBlog = async () => {
+  //   const token = localStorage.getItem("token");
+  //   if (!token || !user) {
+  //     toast.error("Session expired! Please login again.");
+  //     setTimeout(() => navigate("/login"), 1500);
+  //     return;
+  //   }
+
+  //   try {
+  //     const response = await axios.post(
+  //       `${import.meta.env.VITE_API_URL}/blogs`,
+  //       {
+  //         title,
+  //         content,
+  //         category,
+  //         author: user._id,
+  //       },
+  //       {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //       }
+  //     );
+
+  //     if (response?.data?.success) {
+  //       toast.success("Blog saved successfully!");
+  //       setTimeout(() => navigate("/allblogs"), 2000);
+  //     }
+  //   } catch (err) {
+  //     console.error(err);
+  //     toast.error(
+  //       err?.response?.data?.message || "Error creating blog. Please try again."
+  //     );
+  //     if (err?.response?.status === 401) {
+  //       localStorage.clear();
+  //       setTimeout(() => navigate("/login"), 1500);
+  //     }
+  //   }
+  // };
+
+
   const saveBlog = async () => {
-    const token = localStorage.getItem("token");
-    if (!token || !user) {
-      toast.error("Session expired! Please login again.");
+  const token = localStorage.getItem("token");
+
+  if (!token || !user) {
+    toast.error("Session expired! Please login again.");
+    setTimeout(() => navigate("/login"), 1500);
+    return;
+  }
+
+  try {
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_URL}/blogs`,
+      {
+        title,
+        content,
+        category,
+        author: user._id,
+      },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
+    if (response?.data?.success) {
+      toast.success("Blog saved successfully!");
+
+      // ⏳ Give the user 1.5–2 seconds to see the toast, then redirect
+      setTimeout(() => {
+        navigate("/"); // ✅ Redirect to All Blogs page
+      }, 2000);
+    }
+  } catch (err) {
+    console.error(err);
+
+    toast.error(
+      err?.response?.data?.message || "Error creating blog. Please try again."
+    );
+
+    // If unauthorized, clear session and redirect to login
+    if (err?.response?.status === 401) {
+      localStorage.clear();
       setTimeout(() => navigate("/login"), 1500);
-      return;
     }
+  }
+};
 
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/blogs`,
-        {
-          title,
-          content,
-          category,
-          author: user._id,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      if (response?.data?.success) {
-        toast.success("Blog saved successfully!");
-        setTimeout(() => navigate("/allblogs"), 2000);
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error(
-        err?.response?.data?.message || "Error creating blog. Please try again."
-      );
-      if (err?.response?.status === 401) {
-        localStorage.clear();
-        setTimeout(() => navigate("/login"), 1500);
-      }
-    }
-  };
 
   return (
     <div className="bg-gray-50 min-h-screen text-gray-800">
