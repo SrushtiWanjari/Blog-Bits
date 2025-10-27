@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import { Link } from "react-router"; 
+import { Link } from "react-router";
 import toast from "react-hot-toast";
 
 function Signup() {
@@ -32,49 +32,52 @@ function Signup() {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen flex items-center justify-center text-gray-800">
-     
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-500 via-pink-400 to-blue-400 text-gray-800 px-4">
+      <div className="backdrop-blur-lg bg-white/30 shadow-2xl rounded-2xl p-8 w-full max-w-md border border-white/40">
+        <h1 className="text-4xl font-extrabold mb-8 text-center text-white drop-shadow-lg">
+          Create an Account
+        </h1>
 
-      <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-md">
-         <h1 className="text-3xl font-bold mb-6 text-purple-600 text-center">Signup</h1>
-        <input
-          type="text" 
-          placeholder="Name"
-          className="border border-gray-300 rounded p-2 w-full mb-4 bg-white text-gray-800"
-          value={user.name}
-          onChange={(e) => {
-            setUser({ ...user, name: e.target.value });
-          }}
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          className="border border-gray-300 rounded p-2 w-full mb-4 bg-white text-gray-800"
-          value={user.email}
-          onChange={(e) => {
-            setUser({ ...user, email: e.target.value });
-          }}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          className="border border-gray-300 rounded p-2 w-full mb-4 bg-white text-gray-800"
-          value={user.password}
-          onChange={(e) => {
-            setUser({ ...user, password: e.target.value });
-          }}
-        />
-        <button
-          className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded w-full"
-          type="button"
-          onClick={signupUser}
-        >
-          Signup
-        </button>
+        <div className="space-y-5">
+          <input
+            type="text"
+            placeholder="Full Name"
+            className="w-full p-3 rounded-lg bg-white/80 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder-gray-500 transition-all duration-200"
+            value={user.name}
+            onChange={(e) => setUser({ ...user, name: e.target.value })}
+          />
 
-        <p className="mt-6">
+          <input
+            type="email"
+            placeholder="Email Address"
+            className="w-full p-3 rounded-lg bg-white/80 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder-gray-500 transition-all duration-200"
+            value={user.email}
+            onChange={(e) => setUser({ ...user, email: e.target.value })}
+          />
+
+          <input
+            type="password"
+            placeholder="Password"
+            className="w-full p-3 rounded-lg bg-white/80 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder-gray-500 transition-all duration-200"
+            value={user.password}
+            onChange={(e) => setUser({ ...user, password: e.target.value })}
+          />
+
+          <button
+            type="button"
+            onClick={signupUser}
+            className="w-full bg-gradient-to-r from-purple-600 to-blue-500 text-white font-semibold py-3 rounded-lg shadow-md hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200"
+          >
+            Sign Up
+          </button>
+        </div>
+
+        <p className="mt-8 text-center text-white/90 text-sm">
           Already have an account?{" "}
-          <Link to="/login" className="text-blue-500 underline">
+          <Link
+            to="/login"
+            className="text-yellow-200 font-semibold hover:underline hover:text-yellow-100 transition"
+          >
             Login
           </Link>
         </p>

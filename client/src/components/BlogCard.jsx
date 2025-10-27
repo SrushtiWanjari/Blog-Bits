@@ -1,71 +1,7 @@
-// import { Link } from "react-router";
-
-// function BlogCard({
-//   title,
-//   author,
-//   publishedAt,
-//   updatedAt,
-//   status,
-//   category,
-//   slug,
-//   viewCount,
-// }) {
-//   return (
-//     <div className="bg-slate-800 border border-gray-700 p-4 my-4 rounded-md relative shadow-lg hover:shadow-purple-500/50 transition duration-300">
-//       <h2 className="text-xl font-bold mb-2">
-//         {status !== "published" && (
-//           <span className="bg-yellow-200 text-yellow-800 text-xs font-semibold px-2 py-1 rounded-md mr-2">
-//             {status}
-//           </span>
-//         )}
-//         {title}
-//       </h2>
-
-//       <div className="flex items-center gap-4 my-2">
-//         <div className="flex items-center justify-center font-semibold w-[50px] h-[50px] bg-purple-500 text-white rounded-full text-3xl">
-//           {author.name.substring(0, 1)}
-//         </div>
-
-//         <div>
-//           <p className="font-semibold">{author.name}</p>
-//           <p className="text-gray-300 text-sm">{author.email}</p>
-//         </div>
-//       </div>
-
-//       <p className="text-gray-400 text-sm mt-2">
-//         Published On: {new Date(publishedAt || updatedAt).toLocaleString()},
-//         Read By {viewCount} people
-//       </p>
-
-//       {/* Category Badge */}
-//       <span className="absolute top-2 right-2 bg-purple-600 text-white text-xs font-semibold px-2 py-1 rounded-md">
-//         {category}
-//       </span>
-
-//       {/* Read/Edit Button */}
-//       {status === "published" ? (
-//         <Link
-//           className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-md absolute bottom-4 right-4 transition"
-//           to={`/blog/${slug}`}
-//         >
-//           Read More
-//         </Link>
-//       ) : (
-//         <Link
-//           className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-md absolute bottom-4 right-4 transition"
-//           to={`/edit/${slug}`}
-//         >
-//           Edit Blog
-//         </Link>
-//       )}
-//     </div>
-//   );
-// }
-
-// export default BlogCard;
-
-
 import { Link } from "react-router";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useState } from "react";
 
 function BlogCard({
   title,
@@ -76,54 +12,162 @@ function BlogCard({
   category,
   slug,
   viewCount,
+  onDelete, // callback to refresh after delete
 }) {
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // 🧩 Show confirmation toast
+  const confirmDeleteToast = () => {
+    toast.dismiss(); // close any old toasts first
+
+    toast.info(
+      <div className="flex flex-col items-center text-center gap-3 px-5 py-4">
+        <p className="font-semibold text-gray-800 text-base">
+          Are you sure you want to delete{" "}
+          <span className="text-purple-600 font-bold">"{title}"</span>?
+        </p>
+        <div className="flex justify-center gap-3 mt-1">
+          <button
+            onClick={() => {
+              toast.dismiss();
+              handleDelete(true);
+            }}
+            className="bg-gradient-to-r from-red-500 to-pink-600 text-white text-sm font-medium px-5 py-2 rounded-lg shadow-md hover:from-red-600 hover:to-pink-700 hover:shadow-lg transition-all duration-300"
+          >
+            Yes, Delete
+          </button>
+          <button
+            onClick={() => toast.dismiss()}
+            className="bg-gray-200 text-gray-700 text-sm font-medium px-5 py-2 rounded-lg hover:bg-gray-300 hover:shadow transition-all duration-300"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>,
+      {
+        autoClose: false,
+        closeOnClick: false,
+        position: "top-center",
+        className:
+          "!bg-white !rounded-2xl !shadow-2xl !border !border-gray-200 !backdrop-blur-sm",
+      }
+    );
+  };
+
+  // 🗑️ Handle blog deletion (only when confirmed)
+  const handleDelete = async (confirmed = false) => {
+    if (!confirmed) return confirmDeleteToast();
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        toast.error("⚠️ You must be logged in to delete a blog.");
+        return;
+      }
+
+      setIsDeleting(true); // start fade-out effect
+
+      await axios.delete(`${import.meta.env.VITE_API_URL}/blogs/${slug}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      toast.success("🗑️ Blog deleted successfully!", {
+        position: "bottom-right",
+        className:
+          "!bg-gradient-to-r !from-green-500 !to-emerald-600 !text-white !font-medium !rounded-xl",
+      });
+
+      // Smooth delay before removal
+      setTimeout(() => {
+        if (onDelete) onDelete();
+      }, 400);
+    } catch (error) {
+      console.error("Delete failed:", error);
+      setIsDeleting(false);
+      toast.error("❌ Failed to delete blog. Try again!");
+    }
+  };
+
   return (
-    <div className="bg-white border border-gray-200 p-5 rounded-lg shadow hover:shadow-lg transition duration-300 relative">
-      <h2 className="text-xl font-bold mb-2 text-purple-600">
+    <div
+      className={`relative bg-gradient-to-br from-white via-purple-50 to-blue-50 border border-gray-200 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.02] overflow-hidden group ${
+        isDeleting ? "opacity-0 scale-95 pointer-events-none transition-all duration-500" : ""
+      }`}
+    >
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-100/40 to-transparent opacity-0 group-hover:opacity-100 transition duration-500 rounded-2xl"></div>
+
+      {/* Category Badge */}
+      <span className="absolute top-4 right-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
+        {category}
+      </span>
+
+      {/* Title */}
+      <h2 className="text-2xl font-bold mb-3 text-gray-800 leading-tight hover:text-purple-600 transition-colors duration-300 z-10 relative">
         {status !== "published" && (
-          <span className="bg-yellow-100 text-yellow-800 text-xs font-semibold px-2 py-1 rounded-md mr-2">
+          <span className="bg-yellow-100 text-yellow-800 text-xs font-semibold px-2 py-1 rounded-md mr-2 uppercase">
             {status}
           </span>
         )}
         {title}
       </h2>
 
-      <div className="flex items-center gap-4 mb-3">
-        <div className="flex items-center justify-center w-[50px] h-[50px] bg-blue-500 text-white rounded-full font-semibold text-3xl">
-          {author.name.substring(0, 1)}
+      {/* Author Info */}
+      <div className="flex items-center gap-4 mb-4 z-10 relative">
+        <div className="flex items-center justify-center w-[55px] h-[55px] bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-full font-bold text-2xl shadow-inner">
+          {author.name.substring(0, 1).toUpperCase()}
         </div>
         <div>
-          <p className="font-semibold text-gray-800">{author.name}</p>
+          <p className="font-semibold text-gray-900">{author.name}</p>
           <p className="text-gray-500 text-sm">{author.email}</p>
         </div>
       </div>
 
-      <p className="text-gray-500 text-sm mb-3">
-        Published On: {new Date(publishedAt || updatedAt).toLocaleString()} | Read by {viewCount} people
-      </p>
+      {/* Blog Details */}
+      <div className="text-gray-600 text-sm mb-4 z-10 relative">
+        <p>
+          📅{" "}
+          <span className="font-medium text-gray-700">
+            {new Date(publishedAt || updatedAt).toLocaleString()}
+          </span>
+        </p>
+        <p>
+          👁️ Read by <span className="font-semibold">{viewCount}</span> people
+        </p>
+      </div>
 
-      <span className="absolute top-3 right-3 bg-blue-600 text-white text-xs font-semibold px-2 py-1 rounded">
-        {category}
-      </span>
+      {/* Divider */}
+      <div className="h-[1px] bg-gradient-to-r from-transparent via-purple-300 to-transparent mb-4" />
 
-      {status === "published" ? (
-        <Link
-          to={`/blog/${slug}`}
-          className="absolute bottom-4 right-4 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded transition"
+      {/* Buttons */}
+      <div className="flex justify-between items-center z-10 relative">
+        {status === "published" ? (
+          <Link
+            to={`/blog/${slug}`}
+            className="bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold px-5 py-2 rounded-lg shadow-md hover:shadow-lg hover:from-purple-700 hover:to-blue-700 transition duration-300"
+          >
+            Read More →
+          </Link>
+        ) : (
+          <Link
+            to={`/edit/${slug}`}
+            className="bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold px-5 py-2 rounded-lg shadow-md hover:shadow-lg hover:from-purple-700 hover:to-blue-700 transition duration-300"
+          >
+            ✏️ Edit Blog
+          </Link>
+        )}
+
+        {/* Delete Button */}
+        <button
+          onClick={() => handleDelete(false)} // only opens confirmation
+          disabled={isDeleting}
+          className="bg-gradient-to-r from-red-500 to-pink-600 text-white font-semibold px-5 py-2 rounded-lg shadow-md hover:shadow-lg hover:from-red-600 hover:to-pink-700 transition duration-300 disabled:opacity-70 disabled:cursor-not-allowed"
         >
-          Read More
-        </Link>
-      ) : (
-        <Link
-          to={`/edit/${slug}`}
-          className="absolute bottom-4 right-4 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded transition"
-        >
-          Edit Blog
-        </Link>
-      )}
+          🗑️ Delete
+        </button>
+      </div>
     </div>
   );
 }
 
 export default BlogCard;
-

@@ -34,11 +34,11 @@ function EditBlog() {
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
       );
       if (response?.data?.success) {
-        toast.success("Blog saved successfully");
+        toast.success("💾 Blog saved successfully!");
         setTimeout(() => (window.location.href = "/"), 2000);
       }
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Error updating blog");
+      toast.error(err?.response?.data?.message || "❌ Error updating blog");
     }
   };
 
@@ -50,66 +50,82 @@ function EditBlog() {
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
       );
       if (response?.data?.success) {
-        toast.success("Blog published successfully");
+        toast.success("🚀 Blog published successfully!");
         setTimeout(() => (window.location.href = "/"), 2000);
       }
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Error publishing blog");
+      toast.error(err?.response?.data?.message || "❌ Error publishing blog");
     }
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen text-gray-800">
-      <div className="container mx-auto p-6">
-        <Navbar />
-        <h1 className="text-4xl font-bold text-purple-600 mb-6">Edit Blog</h1>
+    <div className="min-h-screen bg-gradient-to-br from-purple-100 via-blue-50 to-pink-100 text-gray-800">
+      <Navbar />
 
-        <input
-          type="text"
-          placeholder="Blog Title"
-          className="border border-gray-300 p-3 w-full rounded mb-4 bg-white text-gray-800"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
+      <div className="container mx-auto px-6 py-10">
+        <div className="bg-white/80 backdrop-blur-lg border border-gray-200 rounded-3xl shadow-2xl p-8 transition-all duration-300 hover:shadow-purple-300">
+          <h1 className="text-4xl font-extrabold text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-500 to-blue-500">
+            ✍️ Edit Your Blog
+          </h1>
 
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="border border-gray-300 p-3 w-full rounded mb-4 bg-white text-gray-800"
-        >
-          {BLOG_CATEGORIES.map((cate) => (
-            <option key={cate} value={cate}>
-              {cate}
-            </option>
-          ))}
-        </select>
+          {/* Blog Title */}
+          <input
+            type="text"
+            placeholder="Enter your blog title..."
+            className="border-2 border-purple-200 focus:border-purple-500 focus:ring focus:ring-purple-100 p-4 w-full rounded-xl mb-5 bg-white/70 text-gray-900 placeholder-gray-400 shadow-sm transition-all duration-300"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
 
-        <MarkdownEditor
-          value={content}
-          onChange={(value) => setContent(value)}
-          height="400px"
-        />
-
-        <div className="flex gap-4">
-          <button
-            className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 mt-4 rounded transition"
-            onClick={updateBlog}
+          {/* Category Dropdown */}
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="border-2 border-purple-200 focus:border-purple-500 focus:ring focus:ring-purple-100 p-4 w-full rounded-xl mb-6 bg-white/70 text-gray-800 shadow-sm transition-all duration-300"
           >
-            Save
-          </button>
-          <button
-            className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 mt-4 rounded transition"
-            onClick={publishBlog}
-          >
-            Publish
-          </button>
+            {BLOG_CATEGORIES.map((cate) => (
+              <option key={cate} value={cate}>
+                {cate}
+              </option>
+            ))}
+          </select>
+
+          {/* Markdown Editor */}
+          <div className="border-2 border-purple-200 rounded-xl overflow-hidden shadow-md mb-6">
+            <MarkdownEditor
+              value={content}
+              onChange={(value) => setContent(value)}
+              height="450px"
+            />
+          </div>
+
+          {/* Buttons */}
+          <div className="flex flex-wrap gap-4 justify-center mt-6">
+            <button
+              className="bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold px-8 py-3 rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300"
+              onClick={updateBlog}
+            >
+              💾 Save Changes
+            </button>
+
+            <button
+              className="bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold px-8 py-3 rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300"
+              onClick={publishBlog}
+            >
+              🚀 Publish Blog
+            </button>
+          </div>
         </div>
 
-        <Toaster />
+        <Toaster position="bottom-right" />
       </div>
+
+       <footer className="mt-16 text-center py-6 text-gray-600 text-sm">
+        © {new Date().getFullYear()} <span className="font-semibold">BlogBits</span> — 
+        Crafted with ❤️ for bloggers worldwide.
+      </footer>
     </div>
   );
 }
 
 export default EditBlog;
-
