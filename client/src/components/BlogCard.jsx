@@ -12,13 +12,13 @@ function BlogCard({
   category,
   slug,
   viewCount,
-  onDelete, // callback to refresh after delete
+  onDelete, // ✅ refresh callback from parent (AllBlogs)
 }) {
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // 🧩 Show confirmation toast
+  // 🔥 Confirmation Toast UI
   const confirmDeleteToast = () => {
-    toast.dismiss(); // close any old toasts first
+    toast.dismiss();
 
     toast.info(
       <div className="flex flex-col items-center text-center gap-3 px-5 py-4">
@@ -54,7 +54,7 @@ function BlogCard({
     );
   };
 
-  // 🗑️ Handle blog deletion (only when confirmed)
+  // 🗑️ Handle actual deletion
   const handleDelete = async (confirmed = false) => {
     if (!confirmed) return confirmDeleteToast();
 
@@ -65,8 +65,9 @@ function BlogCard({
         return;
       }
 
-      setIsDeleting(true); // start fade-out effect
+      setIsDeleting(true);
 
+      // ✅ Send delete request
       await axios.delete(`${import.meta.env.VITE_API_URL}/blogs/${slug}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -77,7 +78,7 @@ function BlogCard({
           "!bg-gradient-to-r !from-green-500 !to-emerald-600 !text-white !font-medium !rounded-xl",
       });
 
-      // Smooth delay before removal
+      // ✅ Smooth refresh
       setTimeout(() => {
         if (onDelete) onDelete();
       }, 400);
@@ -91,7 +92,9 @@ function BlogCard({
   return (
     <div
       className={`relative bg-gradient-to-br from-white via-purple-50 to-blue-50 border border-gray-200 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.02] overflow-hidden group ${
-        isDeleting ? "opacity-0 scale-95 pointer-events-none transition-all duration-500" : ""
+        isDeleting
+          ? "opacity-0 scale-95 pointer-events-none transition-all duration-500"
+          : ""
       }`}
     >
       {/* Gradient overlay */}
@@ -157,9 +160,9 @@ function BlogCard({
           </Link>
         )}
 
-        {/* Delete Button */}
+        {/* ✅ Delete Button */}
         <button
-          onClick={() => handleDelete(false)} // only opens confirmation
+          onClick={() => !isDeleting && handleDelete(false)}
           disabled={isDeleting}
           className="bg-gradient-to-r from-red-500 to-pink-600 text-white font-semibold px-5 py-2 rounded-lg shadow-md hover:shadow-lg hover:from-red-600 hover:to-pink-700 transition duration-300 disabled:opacity-70 disabled:cursor-not-allowed"
         >

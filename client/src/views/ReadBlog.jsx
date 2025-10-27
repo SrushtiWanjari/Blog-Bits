@@ -38,14 +38,13 @@ function ReadBlog() {
       <div className="container mx-auto p-6">
         <Navbar />
 
-        {/* Blog Container */}
+    
         <div className="max-w-4xl mx-auto bg-white/90 backdrop-blur-sm shadow-xl rounded-2xl p-8 border border-gray-200">
-          {/* Title */}
+        
           <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600 leading-snug">
             {blog.title}
           </h1>
 
-          {/* Meta Info */}
           <div className="flex flex-wrap items-center text-sm text-gray-500 mb-6">
             <span className="mr-4">
               🕓 {new Date(blog.publishedAt || blog.updatedAt).toLocaleString()}
@@ -56,7 +55,6 @@ function ReadBlog() {
             </span>
           </div>
 
-          {/* Author */}
           <div className="flex items-center mb-8 bg-gray-50 p-4 rounded-xl shadow-sm">
             <div className="flex items-center justify-center w-[60px] h-[60px] bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full text-2xl font-bold">
               {blog?.author?.name?.substring(0, 1)}
@@ -67,7 +65,7 @@ function ReadBlog() {
             </div>
           </div>
 
-          {/* Blog Content */}
+
           <div
             data-color-mode="light"
             className="prose prose-lg max-w-none prose-headings:text-gray-800 prose-a:text-blue-600 prose-strong:text-purple-600"

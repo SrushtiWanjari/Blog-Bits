@@ -16,7 +16,6 @@ function Navbar() {
 
   return (
     <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm p-4 rounded-lg mb-6 flex justify-between items-center transition-all duration-300">
-      {/* Left Side - Logo */}
       <div className="flex items-center gap-4">
         <Link
           to="/"
@@ -25,7 +24,7 @@ function Navbar() {
           Blog Bits
         </Link>
 
-        {/* Nav Links */}
+
         <div className="hidden md:flex items-center gap-3">
           {user && (
             <Link
@@ -44,7 +43,6 @@ function Navbar() {
         </div>
       </div>
 
-      {/* Right Side - User Info */}
       <div className="flex items-center gap-4">
         {user ? (
           <>

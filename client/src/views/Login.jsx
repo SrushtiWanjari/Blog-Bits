@@ -44,7 +44,6 @@ function Login() {
           Log in to continue to your dashboard
         </p>
 
-        {/* Email Input */}
         <div className="relative mb-5">
           <input
             type="email"
@@ -58,7 +57,6 @@ function Login() {
           </span>
         </div>
 
-        {/* Password Input */}
         <div className="relative mb-6">
           <input
             type="password"
@@ -72,7 +70,6 @@ function Login() {
           </span>
         </div>
 
-        {/* Login Button */}
         <button
           type="button"
           onClick={loginUser}

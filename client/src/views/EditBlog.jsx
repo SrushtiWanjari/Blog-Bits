@@ -68,7 +68,7 @@ function EditBlog() {
             ✍️ Edit Your Blog
           </h1>
 
-          {/* Blog Title */}
+
           <input
             type="text"
             placeholder="Enter your blog title..."
@@ -77,7 +77,6 @@ function EditBlog() {
             onChange={(e) => setTitle(e.target.value)}
           />
 
-          {/* Category Dropdown */}
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
@@ -90,7 +89,6 @@ function EditBlog() {
             ))}
           </select>
 
-          {/* Markdown Editor */}
           <div className="border-2 border-purple-200 rounded-xl overflow-hidden shadow-md mb-6">
             <MarkdownEditor
               value={content}
@@ -99,7 +97,7 @@ function EditBlog() {
             />
           </div>
 
-          {/* Buttons */}
+
           <div className="flex flex-wrap gap-4 justify-center mt-6">
             <button
               className="bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold px-8 py-3 rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300"

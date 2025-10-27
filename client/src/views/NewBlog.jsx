@@ -16,7 +16,7 @@ function NewBlog() {
 
   const navigate = useNavigate();
 
-  // ✅ Check user login on mount
+
   useEffect(() => {
     document.documentElement.setAttribute("data-color-mode", "light");
     const currentUser = getCurrentUser();
@@ -30,7 +30,7 @@ function NewBlog() {
     setUser(currentUser);
   }, []);
 
-  // ✅ Save Blog
+  
   const saveBlog = async () => {
     const token = localStorage.getItem("token");
 
@@ -88,7 +88,6 @@ function NewBlog() {
             ✍️ Create a New Blog
           </h1>
 
-          {/* Blog Title */}
           <input
             type="text"
             placeholder="Enter your blog title..."
@@ -97,7 +96,6 @@ function NewBlog() {
             onChange={(e) => setTitle(e.target.value)}
           />
 
-          {/* Category Dropdown */}
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
@@ -110,7 +108,6 @@ function NewBlog() {
             ))}
           </select>
 
-          {/* Markdown Editor */}
           <div data-color-mode="light" className="rounded-lg overflow-hidden shadow-inner">
             <MarkdownEditor
               value={content}
@@ -119,7 +116,6 @@ function NewBlog() {
             />
           </div>
 
-          {/* Save Button */}
           <div className="flex justify-end mt-6">
             <button
               className={`${
